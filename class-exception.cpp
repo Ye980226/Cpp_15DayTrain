@@ -19,12 +19,8 @@ int Vector::size()
 {
     return sz;
 }
-Vector::Vector(int s)
+Vector::Vector(int s) : elem{new double[s]}, sz{s}
 {
-    if (s < 0)
-        throw length_error{"Vector constructor:negative size"};
-    elem = new double[s];
-    sz = s;
 }
 
 void test()
