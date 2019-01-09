@@ -113,3 +113,11 @@ int main()
 {
     h();
 }
+// 可以用explicit完成显式的声明，让隐式转换存在
+void test(complex z1)
+{
+    complex z2{z1}; // copy initialization
+    complex z3;
+    z3 = z2; // copy assignment
+    // ...
+}
