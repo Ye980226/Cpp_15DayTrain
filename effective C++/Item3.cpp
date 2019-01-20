@@ -65,7 +65,7 @@ class TextBlock
     }
     char &operator[](std::size_t position)
     {
-        return const_cast<char &>(static_cast<const TextBlock &>(*this)[position]);
+        return const_cast<char &>(static_cast<const TextBlock &>(*this)[position]); //const_cast去掉const属性，static_cast加上const属性
     }
     // cast away const on
     // op[]’s return type;
