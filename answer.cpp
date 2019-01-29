@@ -2,18 +2,37 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <vector>
 using namespace std;
 
 template <typename T>
-T compare(const T &p1, const T &p2)
+T compare(T &p1, T &p2)
 {
     return p1 > p2 ? p1 : p2;
 }
-
+template <>
+const char *compare(const char *&p1, const char *&p2)
+{
+    if (strcmp(p1, p2) > 0)
+    {
+        return p1;
+    }
+    return p2;
+}
+template <>
+char *compare(char *&p1, char *&p2)
+{
+    if (strcmp(p1, p2) > 0)
+    {
+        return p1;
+    }
+    return p2;
+}
 // 2.定义一个Person类，封装人的信息（比如：姓名，身份证），需要通过文件读写函数实现多个人的信息写入与读出（提示：读写的时候才用持久化存储技术）
 class Person
 {
   public:
+    Person() {}
     Person(char *n1, char *IdCard)
     {
         name = new char[strlen(n1) + 1];
@@ -29,7 +48,7 @@ class Person
     void write(const char *const filename);
     void read(const char *const filename);
 
-  private:
+  public:
     char *name;
     char *IDCard;
 };
@@ -110,14 +129,64 @@ class Clock
     int minutes = 0;
     int seconds = 0;
 };
+void write(fstream &ioFile, Person &p, const char *const filename, int length)
+{
+    ioFile.write((char *)&p, length);
+}
+void read(const char *const filename, int length)
+{
+    vector<Person> v1;
+    Person p;
+    fstream ioFile;
+    ioFile.open(filename, ios::in);
+    ioFile.read((char *)&p, length);
+    while (!ioFile.eof())
+    {
+        v1.push_back(p);
+        ioFile.read((char *)&p, length);
+    }
+    ioFile.close();
+    for (vector<Person>::iterator vt = v1.begin(); vt != v1.end(); vt++)
+    {
+        cout << "name:  " << vt->name << "   IDCard:   " << vt->IDCard << endl;
+    }
+}
 
 void test()
 {
-    cout << compare<string>("123", "234") << endl;
-    Person p1("leon", "123456789012345678");
+    const char *p1 = "123";
+    const char *p2 = "234";
+    cout << compare<const char *>(p1, p2) << endl;
+
+    Person pe1("leon", "123456789012345678");
+    Person pe2("leon", "123456789012345678");
+    Person pe3("leon", "123456789012345678");
+    Person pe4("leon", "123456789012345678");
+    Person pe5("leon", "123456789012345678");
+    Person pe6("leon", "123456789012345678");
+    Person pe7("leon", "123456789012345678");
+    Person pe8("leon", "123456789012345678");
+    Person pe9("leon", "123456789012345678");
+    Person pe10("leon", "123456789012345678");
+    int length = sizeof(pe1);
+    // Person pe2;
     const char *const filename = "test.txt";
-    p1.write(filename);
-    p1.read(filename);
+
+    fstream ioFile;
+    ioFile.open(filename, ios::out);
+    write(ioFile, pe1, filename, length);
+    write(ioFile, pe2, filename, length);
+    write(ioFile, pe3, filename, length);
+    write(ioFile, pe4, filename, length);
+    write(ioFile, pe5, filename, length);
+    write(ioFile, pe6, filename, length);
+    write(ioFile, pe7, filename, length);
+    write(ioFile, pe8, filename, length);
+    write(ioFile, pe9, filename, length);
+    write(ioFile, pe10, filename, length);
+    ioFile.close();
+    read(filename, length);
+
     Array a1;
     a1["小小"] = 1000;
     cout << endl
